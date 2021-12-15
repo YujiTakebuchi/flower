@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchImages } from "./Image";
-import { fetchText } from "./Text";
-import { fetchVideo } from "./Video";
+import { fetchImages } from "./api";
+import { fetchText } from "./api";
+import { fetchVideo } from "./api";
 
 function Header() {
   return (
@@ -27,6 +27,7 @@ function Image(props) {
   );
 }
 
+
 function Text(props) {
   return (
     <figure className="text">
@@ -40,7 +41,7 @@ function Video(props) {
     <div className="card">
       <div className="card-video">
         <figure className="video">
-          <video src={props.src} alt="Flower video" />
+          <img src={props.src} alt="Flower video" />
         </figure>
       </div>
     </div>
@@ -51,7 +52,7 @@ function Loading() {
   return <p>Loading...</p>;
 }
 
-function ImageGallery(props) {
+function Gallery(props) {
   const { urls } = props;
   if (urls == null) {
     return <Loading />;
@@ -61,43 +62,7 @@ function ImageGallery(props) {
       {urls.map((url) => {
         return (
           <div key={url} className="column is-3">
-            <Image src={url} />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function TextGallery(props) {
-  const { urls } = props;
-  if (urls == null) {
-    return <Loading />;
-  }
-  return (
-    <div className="columns is-vcentered is-multiline">
-      {urls.map((url) => {
-        return (
-          <div key={url} className="column is-3">
-            <Text src={url} />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function VideoGallery(props) {
-  const { urls } = props;
-  if (urls == null) {
-    return <Loading />;
-  }
-  return (
-    <div className="columns is-vcentered is-multiline">
-      {urls.map((url) => {
-        return (
-          <div key={url} className="column is-3">
-            <Video src={url} />
+            <Image src={url.img} />
           </div>
         );
       })}
@@ -136,63 +101,90 @@ function Form(props) {
 }
 
 function Main() {
-  const [imageurls, setImageurls] = useState(null);
-  const [texturls, setTexturls] = useState(null);
-  const [videourls, setVideourls] = useState(null);
+  // const [imageURL, setImageURL] = useState(null);
+  const [urls, setUrls] = useState([]);
 
   useEffect(() => {
-    fetchImages("sakura").then((imageurls) => {
-      setImageurls(imageurls);
+    fetchImages("sakura").then((imgURLs) => {
+      imgURLs.map((img) => {
+        setUrls(url => ([...url, { img: img }]));
+      });
+      // setUrls(urls);
     });
-    fetchText("sakura").then((texturls) => {
-      setTexturls(texturls);
+    fetchText("sakura").then((textURLs) => {
+      textURLs.map((text) => {
+        setUrls(url => ([...url, { text: text }]));
+      });
+      // setUrls(urls);
     });
-    fetchVideo("sakura").then((videourls) => {
-      setVideourls(videourls);
+    fetchVideo("sakura").then((videoURLs) => {
+      videoURLs.map((video) => {
+        setUrls(url => ([...url, { video: video }]));
+      });
+      // setUrls(urls);
     });
+    // setUrls(urls);
+    // fetchText("sakura").then((textURLs) => {
+    //   setUrls({ urls: { text: textURLs } });
+    // });
+    // fetchVideo("sakura").then((videURLs) => {
+    //   setUrls({ urls: { video: videURLs } });
+    // });
   }, []);
 
   function reloadImages(flower) {
-    fetchImages(flower).then((imageurls) => {
-      setImageurls(imageurls);
+    fetchImages(flower).then((imgURLs) => {
+      imgURLs.map((img) => {
+        urls.push({ img: img });
+      });
+      setUrls(urls);
     });
+    setUrls(urls);
   }
 
   function reloadText(flower) {
-    fetchText(flower).then((texturls) => {
-      setTexturls(texturls);
+    fetchImages(flower).then((textURLs) => {
+      textURLs.map((text) => {
+        urls.push({ text: text });
+      });
+      setUrls(urls);
     });
   }
 
   function reloadVideo(flower) {
-    fetchVideo(flower).then((videourls) => {
-      setVideourls(videourls);
+    fetchImages(flower).then((videoURLs) => {
+      videoURLs.map((video) => {
+        urls.push({ video: video });
+      });
+      setUrls(urls);
     });
   }
+
+  // function reloadText(flower) {
+  //   fetchText(flower).then((urls) => {
+  //     setUrls(urls);
+  //   });
+  // }
+
+  // function reloadVideo(flower) {
+  //   fetchVideo(flower).then((urls) => {
+  //     setUrls(urls);
+  //   });
+  // }
 
   return (
     <main>
       <section className="section">
         <div className="container">
-          <Form onFormSubmit={reloadImages} onFormSubmit={reloadText} onFormSubmit={reloadVideo} />
+          <Form onFormSubmit={reloadImages} />
         </div>
       </section>
       <section className="section">
         <div className="container">
-          <ImageGallery imageurls={imageurls} />
+          <Gallery urls={urls} />
         </div>
       </section>
-      <section className="section">
-        <div className="container">
-          <TextGallery texturls={texturls} />
-        </div>
-      </section>
-      <section className="section">
-        <div className="container">
-          <VideoGallery videourls={videourls} />
-        </div>
-      </section>
-    </main >
+    </main>
   );
 }
 
