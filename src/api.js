@@ -15,3 +15,9 @@ export async function fetchVideo(flower) {
     const data = await response.json();
     return data.message;
 }
+
+export async function fetchFlowerObject (flower) {
+    const response = await fetch(`image/${flower}/object.json`);
+    const data = await response.json();
+    return data.message;
+}

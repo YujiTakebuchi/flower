@@ -1,0 +1,30 @@
+{
+    "message": [
+        {
+            "image": "image/sakura/0.jpeg",
+            "text": "サクラ(英名:Cherry blossom)0",
+            "video": "image/sakura/sample.mp4"
+        },
+        {
+            "image": "image/sakura/1.jpeg",
+            "text": "サクラ(英名:Cherry blossom)1",
+            "video": "image/sakura/sample.mp4"
+        },
+        {
+            "image": "image/sakura/2.jpeg",
+            "text": "サクラ(英名:Cherry blossom)2",
+            "video": "image/sakura/sample.mp4"
+        },
+        {
+            "image": "image/sakura/3.jpeg",
+            "text": "サクラ(英名:Cherry blossom)3",
+            "video": "image/sakura/sample.mp4"
+        },
+        {
+            "image": "image/sakura/4.jpeg",
+            "text": "サクラ(英名:Cherry blossom)4",
+            "video": "image/sakura/sample.mp4"
+        }
+    ],
+    "status": "success"
+}

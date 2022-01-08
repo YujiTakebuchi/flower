@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchImages } from "./api";
 import { fetchText } from "./api";
 import { fetchVideo } from "./api";
+import { fetchFlowerObject } from "./api";
 
 function Header() {
   return (
@@ -31,7 +32,7 @@ function Image(props) {
 function Text(props) {
   return (
     <figure className="text">
-      <p src={props.src} />
+      <p>{props.src}</p>
     </figure>
   );
 }
@@ -41,7 +42,7 @@ function Video(props) {
     <div className="card">
       <div className="card-video">
         <figure className="video">
-          <img src={props.src} alt="Flower video" />
+          <video src={props.src} alt="Flower video" autoplay muted playsinline/>
         </figure>
       </div>
     </div>
@@ -63,6 +64,8 @@ function Gallery(props) {
         return (
           <div key={url} className="column is-3">
             <Image src={url.img} />
+            <Text src={url.text} />
+            <Video src={url.video} />
           </div>
         );
       })}
@@ -105,31 +108,18 @@ function Main() {
   const [urls, setUrls] = useState([]);
 
   useEffect(() => {
-    fetchImages("sakura").then((imgURLs) => {
-      imgURLs.map((img) => {
-        setUrls(url => ([...url, { img: img }]));
+    fetchFlowerObject("sakura").then((objURLs) => {
+      objURLs.map(obj => {
+        setUrls(url => ([
+          ...url, 
+          {
+            img: obj.image,
+            text: obj.text,
+            video: obj.video
+          }
+        ]));
       });
-      // setUrls(urls);
     });
-    fetchText("sakura").then((textURLs) => {
-      textURLs.map((text) => {
-        setUrls(url => ([...url, { text: text }]));
-      });
-      // setUrls(urls);
-    });
-    fetchVideo("sakura").then((videoURLs) => {
-      videoURLs.map((video) => {
-        setUrls(url => ([...url, { video: video }]));
-      });
-      // setUrls(urls);
-    });
-    // setUrls(urls);
-    // fetchText("sakura").then((textURLs) => {
-    //   setUrls({ urls: { text: textURLs } });
-    // });
-    // fetchVideo("sakura").then((videURLs) => {
-    //   setUrls({ urls: { video: videURLs } });
-    // });
   }, []);
 
   function reloadImages(flower) {
